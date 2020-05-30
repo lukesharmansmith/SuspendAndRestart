@@ -7,11 +7,17 @@
 
     internal class Program
     {
-        private const string ProcessName = "GTA5";
-        private const int Delay = 8000;
+        private static string processName;
+        private static int delay = 8000;
 
         static void Main(string[] args)
         {
+            // ProcessName as in EXE name without extension
+            // SuspendDelay as integer miliseconds value
+
+            //Expected command args <ProcessName> <SuspendDelay>
+            // E.g. Notepad 10000
+
             Console.WriteLine("Suspend and restart");
 
             if (args.Any())
@@ -22,6 +28,16 @@
                 }
             }
 
+            if(args.Length >= 1)
+            {
+                processName = args[0].Trim();
+            }
+
+            if (args.Length >= 2)
+            {
+                delay = int.Parse(args[1].Trim());
+            }
+
             SuspendRestart();
         }
 
@@ -29,7 +45,7 @@
         {
             while (true)
             {
-                Console.WriteLine("Press enter key to suspend {0} and resume after {1}", ProcessName, Delay);
+                Console.WriteLine("Press enter key to suspend {0} and resume after {1}", processName, delay);
 
                 var enteredKey = Console.ReadKey();
 
@@ -42,20 +58,20 @@
 
         private static void SuspendRestart()
         {
-            var process = Process.GetProcessesByName(ProcessName).FirstOrDefault();
+            var process = Process.GetProcessesByName(processName).FirstOrDefault();
             if (process != null)
             {
-                Console.WriteLine("Suspending {0}", ProcessName);
+                Console.WriteLine("Suspending {0}", processName);
                 process.Suspend();
 
-                Thread.Sleep(Delay);
+                Thread.Sleep(delay);
 
-                Console.WriteLine("Resuming {0}", ProcessName);
+                Console.WriteLine("Resuming {0}", processName);
                 process.Resume();
             }
             else
             {
-                Console.WriteLine("{0} Not found", ProcessName);
+                Console.WriteLine("{0} Not found", processName);
             }
         }
     }
